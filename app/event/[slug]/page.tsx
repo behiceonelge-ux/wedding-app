@@ -19,10 +19,10 @@ export default async function EventPage({ params }: EventPageProps) {
     <main className="min-h-screen px-4 py-6">
       <div className="mx-auto flex w-full max-w-md flex-col gap-4">
         <section className="rounded-3xl border border-line bg-card p-5 shadow-sm">
-          <p className="text-xs uppercase tracking-[0.24em] text-clay">Event</p>
+          <p className="text-xs uppercase tracking-[0.24em] text-clay">Etkinlik</p>
           <h1 className="mt-2 text-3xl font-semibold text-ink">{event.name}</h1>
           <p className="mt-2 text-sm leading-6 text-ink/70">
-            Take a photo and upload it instantly. Maximum 30 photos per guest.
+            Fotoğrafınızı çekip hemen yükleyin. Her misafir için en fazla 30 fotoğraf yüklenebilir.
           </p>
         </section>
 

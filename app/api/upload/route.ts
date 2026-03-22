@@ -15,17 +15,17 @@ export async function POST(request: Request) {
   const file = formData.get("file");
 
   if (!slug || !guestId || !(file instanceof File)) {
-    return NextResponse.json({ error: "Invalid upload request" }, { status: 400 });
+    return NextResponse.json({ error: "Geçersiz yükleme isteği" }, { status: 400 });
   }
 
   if (!file.type.startsWith("image/")) {
-    return NextResponse.json({ error: "Only image uploads are allowed" }, { status: 400 });
+    return NextResponse.json({ error: "Sadece görsel yüklenebilir" }, { status: 400 });
   }
 
   const event = await getEventBySlug(slug);
 
   if (!event) {
-    return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    return NextResponse.json({ error: "Etkinlik bulunamadı" }, { status: 404 });
   }
 
   await ensureGuestExists(event.id, guestId);
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   if (currentCount >= MAX_UPLOADS_PER_GUEST) {
     return NextResponse.json(
       {
-        error: "Upload limit reached",
+        error: "Yükleme limiti doldu",
         remainingUploads: 0
       },
       { status: 400 }
