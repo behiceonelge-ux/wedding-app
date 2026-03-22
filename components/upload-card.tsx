@@ -206,7 +206,7 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
       </button>
 
       <p className="mt-3 text-center text-sm text-ink/70">{status}</p>
-      <p className="text-center text-xs text-ink/55">Her misafir en fazla 30 fotoğraf yükleyebilir.</p>
+      <p className="text-center text-xs text-ink/55">Her misafir en fazla 10 fotoğraf yükleyebilir.</p>
       <p className="mt-2 text-center text-xs text-ink/55">
         Desteklenen mobil tarayıcılarda kamera doğrudan açılır.
       </p>
