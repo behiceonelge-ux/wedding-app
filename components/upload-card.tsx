@@ -161,6 +161,9 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
         </div>
 
         <p className="text-sm text-ink/70">Lütfen her girişinizde aynı ad ve soyadı kullanın.</p>
+        <p className="text-center text-xs text-ink/60">
+          ⚠️ Aynı cihazdan devam etmek için sayfayı tamamen kapatmamaya özen gösterin.
+        </p>
 
         <button
           type="submit"
@@ -203,13 +206,8 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
             : "Fotoğraf çek"}
       </button>
 
-      <div className="rounded-2xl border border-clay/20 bg-clay/10 px-4 py-3 text-center">
-        <p className="text-sm font-medium text-ink">
-          Lütfen siteyi tamamen kapatmayın (arka plandan kaldırmayın).
-        </p>
-      </div>
-
       <p className="mt-3 text-center text-sm text-ink/70">{status}</p>
+      <p className="text-center text-xs text-ink/55">Her misafir en fazla 30 fotoğraf yükleyebilir.</p>
       <p className="mt-2 text-center text-xs text-ink/55">
         Desteklenen mobil tarayıcılarda kamera doğrudan açılır.
       </p>

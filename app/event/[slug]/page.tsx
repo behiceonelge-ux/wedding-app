@@ -21,9 +21,15 @@ export default async function EventPage({ params }: EventPageProps) {
         <section className="rounded-3xl border border-line bg-card p-5 shadow-sm">
           <p className="text-xs uppercase tracking-[0.24em] text-clay">Etkinlik</p>
           <h1 className="mt-2 text-3xl font-semibold text-ink">{event.name}</h1>
-          <p className="mt-2 text-sm leading-6 text-ink/70">
-            Fotoğrafınızı çekip hemen yükleyin. Her misafir için en fazla 30 fotoğraf yüklenebilir.
-          </p>
+          <div className="mt-4 space-y-3 text-center">
+            <p className="text-2xl font-semibold leading-8 text-ink">📸 O anı yakala, bizimle paylaş!</p>
+            <p className="text-sm leading-6 text-ink/70">
+              Düğün boyunca çektiğin fotoğrafları buraya yükleyerek anılarımıza katkıda bulunabilirsin.
+            </p>
+            <p className="text-sm leading-6 text-ink/80">
+              💌 Fotoğraf eklemek için lütfen adınızı ve soyadınızı giriniz.
+            </p>
+          </div>
         </section>
 
         <UploadCard eventSlug={event.slug} eventName={event.name} />
