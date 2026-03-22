@@ -46,11 +46,11 @@ export default async function AdminPage({ params, searchParams }: AdminPageProps
 
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
           {photos.map((photo) => (
-            <div key={photo.id} className="overflow-hidden rounded-2xl border border-line bg-card shadow-sm">
+            <div key={photo.id} className="flex flex-col rounded-2xl border border-line bg-card shadow-sm">
               <img
                 src={photo.publicUrl}
                 alt="Wedding guest upload"
-                className="aspect-square h-full w-full object-cover"
+                className="aspect-square w-full rounded-t-2xl object-cover"
               />
               <div className="flex gap-2 p-3">
                 <a
