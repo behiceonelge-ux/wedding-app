@@ -99,6 +99,12 @@ This creates:
 - `guests`
 - `photos`
 
+`guests` now includes:
+
+- `first_name`
+- `last_name`
+- unique guest identity on `event_id + first_name + last_name`
+
 It also inserts one sample event:
 
 - slug: `demo-wedding`

@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { MAX_UPLOADS_PER_GUEST } from "@/lib/constants";
-import { buildGuestId, loadGuestName, saveGuestName } from "@/lib/guest";
+import { loadGuestName, saveGuestName } from "@/lib/guest";
 
 type UploadCardProps = {
   eventSlug: string;
@@ -11,7 +11,6 @@ type UploadCardProps = {
 
 export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [guestId, setGuestId] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [remainingUploads, setRemainingUploads] = useState(MAX_UPLOADS_PER_GUEST);
@@ -26,19 +25,17 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
     setLastName(savedGuest.lastName);
 
     if (savedGuest.firstName && savedGuest.lastName) {
-      const nextGuestId = buildGuestId(eventSlug, savedGuest.firstName, savedGuest.lastName);
-      setGuestId(nextGuestId);
-      void fetchGuestStatus(nextGuestId);
+      void fetchGuestStatus(savedGuest.firstName, savedGuest.lastName);
     }
   }, [eventSlug]);
 
-  const fetchGuestStatus = async (nextGuestId: string) => {
+  const fetchGuestStatus = async (nextFirstName: string, nextLastName: string) => {
     setIsLoadingStatus(true);
     setStatus("Yükleme hakkı kontrol ediliyor...");
 
     try {
       const response = await fetch(
-        `/api/guest-status?slug=${encodeURIComponent(eventSlug)}&guestId=${encodeURIComponent(nextGuestId)}`,
+        `/api/guest-status?slug=${encodeURIComponent(eventSlug)}&first_name=${encodeURIComponent(nextFirstName)}&last_name=${encodeURIComponent(nextLastName)}`,
         { cache: "no-store" }
       );
 
@@ -74,9 +71,7 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
       lastName: trimmedLastName
     });
 
-    const nextGuestId = buildGuestId(eventSlug, trimmedFirstName, trimmedLastName);
-    setGuestId(nextGuestId);
-    await fetchGuestStatus(nextGuestId);
+    await fetchGuestStatus(trimmedFirstName, trimmedLastName);
   };
 
   const openCamera = () => {
@@ -86,13 +81,17 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
-    if (!file || !guestId || isUploading || remainingUploads <= 0) {
+    const trimmedFirstName = firstName.trim();
+    const trimmedLastName = lastName.trim();
+
+    if (!file || !trimmedFirstName || !trimmedLastName || isUploading || remainingUploads <= 0) {
       return;
     }
 
     const formData = new FormData();
     formData.append("slug", eventSlug);
-    formData.append("guestId", guestId);
+    formData.append("first_name", trimmedFirstName);
+    formData.append("last_name", trimmedLastName);
     formData.append("file", file);
 
     setIsUploading(true);
@@ -187,14 +186,14 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
         capture="environment"
         className="hidden"
         onChange={handleFileChange}
-        disabled={isUploading || remainingUploads <= 0 || !guestId || isLoadingStatus}
+        disabled={isUploading || remainingUploads <= 0 || !firstName.trim() || !lastName.trim() || isLoadingStatus}
         aria-label={`${eventName} için fotoğraf çek`}
       />
 
       <button
         type="button"
         onClick={openCamera}
-        disabled={isUploading || remainingUploads <= 0 || !guestId || isLoadingStatus}
+        disabled={isUploading || remainingUploads <= 0 || !firstName.trim() || !lastName.trim() || isLoadingStatus}
         className="mt-4 flex h-16 w-full items-center justify-center rounded-2xl bg-ink text-base font-medium text-white transition disabled:cursor-not-allowed disabled:bg-ink/40"
       >
         {remainingUploads <= 0

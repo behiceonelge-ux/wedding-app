@@ -13,6 +13,13 @@ create table if not exists public.guests (
   created_at timestamptz not null default now()
 );
 
+alter table public.guests add column if not exists first_name text;
+alter table public.guests add column if not exists last_name text;
+
+create unique index if not exists guests_event_name_unique_idx
+on public.guests(event_id, first_name, last_name)
+where first_name is not null and last_name is not null;
+
 create table if not exists public.photos (
   id uuid primary key default gen_random_uuid(),
   event_id uuid not null references public.events(id) on delete cascade,

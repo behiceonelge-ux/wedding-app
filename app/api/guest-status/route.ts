@@ -4,19 +4,24 @@ import { MAX_UPLOADS_PER_GUEST } from "@/lib/constants";
 
 export async function GET(request: NextRequest) {
   const slug = request.nextUrl.searchParams.get("slug");
-  const guestId = request.nextUrl.searchParams.get("guestId");
+  const firstName = request.nextUrl.searchParams.get("first_name");
+  const lastName = request.nextUrl.searchParams.get("last_name");
 
-  if (!slug || !guestId) {
-    return NextResponse.json({ error: "Missing slug or guestId" }, { status: 400 });
+  if (!slug || !firstName || !lastName) {
+    return NextResponse.json({ error: "Eksik ad veya soyad bilgisi" }, { status: 400 });
   }
 
   const event = await getEventBySlug(slug);
 
   if (!event) {
-    return NextResponse.json({ error: "Event not found" }, { status: 404 });
+    return NextResponse.json({ error: "Etkinlik bulunamadı" }, { status: 404 });
   }
 
-  const uploadedCount = await ensureGuestAndCountUploads(event.id, guestId);
+  const { uploadedCount } = await ensureGuestAndCountUploads({
+    eventId: event.id,
+    firstName,
+    lastName
+  });
 
   return NextResponse.json({
     uploadedCount,

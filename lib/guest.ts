@@ -8,31 +8,15 @@ function getGuestNameStorageKey(eventSlug: string) {
 }
 
 function normalizeNamePart(value: string) {
-  return value
-    .trim()
-    .toLocaleLowerCase("tr-TR")
-    .replace(/\s+/g, " ");
-}
-
-function slugifyNamePart(value: string) {
-  return normalizeNamePart(value)
-    .replace(/[^a-z0-9\u00e7\u011f\u0131\u00f6\u015f\u00fc\s-]/gi, "")
-    .replace(/\s+/g, "-");
-}
-
-export function buildGuestId(eventSlug: string, firstName: string, lastName: string) {
-  const normalizedFirstName = slugifyNamePart(firstName);
-  const normalizedLastName = slugifyNamePart(lastName);
-
-  return `${eventSlug}:${normalizedFirstName}:${normalizedLastName}`;
+  return value.trim().replace(/\s+/g, " ");
 }
 
 export function saveGuestName(eventSlug: string, values: GuestFormValues) {
   window.localStorage.setItem(
     getGuestNameStorageKey(eventSlug),
     JSON.stringify({
-      firstName: values.firstName.trim(),
-      lastName: values.lastName.trim()
+      firstName: normalizeNamePart(values.firstName),
+      lastName: normalizeNamePart(values.lastName)
     })
   );
 }
@@ -51,8 +35,8 @@ export function loadGuestName(eventSlug: string): GuestFormValues {
     const parsed = JSON.parse(rawValue) as Partial<GuestFormValues>;
 
     return {
-      firstName: (parsed.firstName || "").trim(),
-      lastName: (parsed.lastName || "").trim()
+      firstName: normalizeNamePart(parsed.firstName || ""),
+      lastName: normalizeNamePart(parsed.lastName || "")
     };
   } catch {
     return {

@@ -6,6 +6,12 @@ type EventRow = {
   name: string;
 };
 
+type GuestIdentityInput = {
+  eventId: string;
+  firstName: string;
+  lastName: string;
+};
+
 type PhotoRecordInput = {
   eventId: string;
   guestId: string;
@@ -29,29 +35,84 @@ export async function getEventBySlug(slug: string) {
   return data as EventRow | null;
 }
 
-export async function ensureGuestExists(eventId: string, guestId: string) {
-  const supabase = getSupabaseAdmin();
-  const { error } = await supabase.from("guests").upsert(
-    {
-      id: guestId,
-      event_id: eventId
-    },
-    {
-      onConflict: "id"
-    }
-  );
-
-  if (error) {
-    throw new Error(error.message);
-  }
+function normalizeGuestNamePart(value: string) {
+  return value.trim().toLocaleLowerCase("tr-TR").replace(/\s+/g, " ");
 }
 
-export async function countGuestUploads(eventId: string, guestId: string) {
+function getGuestIdentity(firstName: string, lastName: string) {
+  return {
+    firstName: normalizeGuestNamePart(firstName),
+    lastName: normalizeGuestNamePart(lastName)
+  };
+}
+
+export async function findOrCreateGuest({ eventId, firstName, lastName }: GuestIdentityInput) {
+  const supabase = getSupabaseAdmin();
+  const identity = getGuestIdentity(firstName, lastName);
+  const { data: existingGuest, error: selectError } = await supabase
+    .from("guests")
+    .select("id")
+    .eq("event_id", eventId)
+    .eq("first_name", identity.firstName)
+    .eq("last_name", identity.lastName)
+    .maybeSingle();
+
+  if (selectError) {
+    throw new Error(selectError.message);
+  }
+
+  if (existingGuest) {
+    return {
+      id: existingGuest.id as string,
+      firstName: identity.firstName,
+      lastName: identity.lastName
+    };
+  }
+
+  const guestId = crypto.randomUUID();
+  const { data: createdGuest, error: insertError } = await supabase
+    .from("guests")
+    .insert({
+      id: guestId,
+      event_id: eventId,
+      first_name: identity.firstName,
+      last_name: identity.lastName
+    })
+    .select("id")
+    .single();
+
+  if (insertError) {
+    const { data: retryGuest, error: retryError } = await supabase
+      .from("guests")
+      .select("id")
+      .eq("event_id", eventId)
+      .eq("first_name", identity.firstName)
+      .eq("last_name", identity.lastName)
+      .maybeSingle();
+
+    if (retryError || !retryGuest) {
+      throw new Error(insertError.message);
+    }
+
+    return {
+      id: retryGuest.id as string,
+      firstName: identity.firstName,
+      lastName: identity.lastName
+    };
+  }
+
+  return {
+    id: createdGuest.id as string,
+    firstName: identity.firstName,
+    lastName: identity.lastName
+  };
+}
+
+export async function countGuestUploads(guestId: string) {
   const supabase = getSupabaseAdmin();
   const { count, error } = await supabase
     .from("photos")
     .select("id", { count: "exact", head: true })
-    .eq("event_id", eventId)
     .eq("guest_id", guestId);
 
   if (error) {
@@ -61,9 +122,14 @@ export async function countGuestUploads(eventId: string, guestId: string) {
   return count ?? 0;
 }
 
-export async function ensureGuestAndCountUploads(eventId: string, guestId: string) {
-  await ensureGuestExists(eventId, guestId);
-  return countGuestUploads(eventId, guestId);
+export async function ensureGuestAndCountUploads(input: GuestIdentityInput) {
+  const guest = await findOrCreateGuest(input);
+  const uploadedCount = await countGuestUploads(guest.id);
+
+  return {
+    guestId: guest.id,
+    uploadedCount
+  };
 }
 
 export async function uploadPhotoToStorage({ eventSlug, guestId, file }: UploadPhotoInput) {
