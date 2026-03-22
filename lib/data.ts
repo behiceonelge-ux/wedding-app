@@ -182,13 +182,14 @@ export async function getAdminPhotosBySlug(slug: string) {
 
   return (data || []).map((photo) => {
     const { data: publicUrlData } = supabase.storage.from(getStorageBucket()).getPublicUrl(photo.storage_path);
+    const guestRow = Array.isArray(photo.guests) ? photo.guests[0] : photo.guests;
 
     return {
       id: photo.id as string,
       storagePath: photo.storage_path as string,
       publicUrl: publicUrlData.publicUrl,
-      firstName: photo.guests.first_name as string,
-      lastName: photo.guests.last_name as string,
+      firstName: (guestRow?.first_name as string | undefined) || "",
+      lastName: (guestRow?.last_name as string | undefined) || "",
       createdAt: photo.created_at as string
     };
   });
