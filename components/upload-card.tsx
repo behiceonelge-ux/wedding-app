@@ -18,10 +18,16 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    const nextGuestId = getOrCreateGuestId(eventSlug);
-    setGuestId(nextGuestId);
-
     const loadStatus = async () => {
+      const nextGuestId = getOrCreateGuestId(eventSlug);
+
+      if (!nextGuestId) {
+        setStatus("Unable to load upload status.");
+        return;
+      }
+
+      setGuestId(nextGuestId);
+
       const response = await fetch(
         `/api/guest-status?slug=${encodeURIComponent(eventSlug)}&guestId=${encodeURIComponent(nextGuestId)}`,
         { cache: "no-store" }

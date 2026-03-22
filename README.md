@@ -54,7 +54,7 @@ Minimal mobile-first wedding photo upload app built with Next.js, Supabase, and 
 ## What it does
 
 - `/event/[slug]`: guest upload page
-- local guest ID stored in `localStorage`
+- stable guest ID stored in both `localStorage` and a long-lived browser cookie
 - max 30 photos per guest
 - remaining upload counter
 - camera capture input only
