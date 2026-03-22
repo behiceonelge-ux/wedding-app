@@ -172,7 +172,7 @@ export async function getAdminPhotosBySlug(slug: string) {
   const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
     .from("photos")
-    .select("id, storage_path, created_at, events!inner(slug)")
+    .select("id, storage_path, created_at, events!inner(slug), guests!inner(first_name, last_name)")
     .eq("events.slug", slug)
     .order("created_at", { ascending: false });
 
@@ -186,7 +186,10 @@ export async function getAdminPhotosBySlug(slug: string) {
     return {
       id: photo.id as string,
       storagePath: photo.storage_path as string,
-      publicUrl: publicUrlData.publicUrl
+      publicUrl: publicUrlData.publicUrl,
+      firstName: photo.guests.first_name as string,
+      lastName: photo.guests.last_name as string,
+      createdAt: photo.created_at as string
     };
   });
 }

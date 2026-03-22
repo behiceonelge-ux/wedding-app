@@ -13,6 +13,16 @@ type AdminPageProps = {
   };
 };
 
+function formatUploadTime(value: string) {
+  return new Intl.DateTimeFormat("tr-TR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(new Date(value));
+}
+
 export default async function AdminPage({ params, searchParams }: AdminPageProps) {
   const event = await getEventBySlug(params.slug);
 
@@ -52,6 +62,12 @@ export default async function AdminPage({ params, searchParams }: AdminPageProps
                 alt="Wedding guest upload"
                 className="aspect-square w-full rounded-t-2xl object-cover"
               />
+              <div className="px-3 pt-3">
+                <p className="text-sm font-medium text-ink">
+                  {photo.firstName} {photo.lastName}
+                </p>
+                <p className="mt-1 text-xs text-ink/60">{formatUploadTime(photo.createdAt)}</p>
+              </div>
               <div className="flex gap-2 p-3">
                 <a
                   href={photo.publicUrl}
