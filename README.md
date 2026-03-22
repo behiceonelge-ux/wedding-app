@@ -17,6 +17,9 @@ Minimal mobile-first wedding photo upload app built with Next.js, Supabase, and 
 │   │   │       └── route.ts
 │   │   ├── guest-status
 │   │   │   └── route.ts
+│   │   ├── photos
+│   │   │   └── download
+│   │   │       └── route.ts
 │   │   └── upload
 │   │       └── route.ts
 │   ├── event
@@ -55,7 +58,7 @@ Minimal mobile-first wedding photo upload app built with Next.js, Supabase, and 
 - max 30 photos per guest
 - remaining upload counter
 - camera capture input only
-- `/admin/[slug]`: password-protected image gallery
+- `/admin/[slug]`: password-protected image gallery with View and Download buttons
 - Supabase database for `events`, `guests`, `photos`
 - Supabase Storage for photo files
 

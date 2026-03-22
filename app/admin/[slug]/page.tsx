@@ -52,6 +52,23 @@ export default async function AdminPage({ params, searchParams }: AdminPageProps
                 alt="Wedding guest upload"
                 className="aspect-square h-full w-full object-cover"
               />
+              <div className="flex gap-2 p-3">
+                <a
+                  href={photo.publicUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex h-10 flex-1 items-center justify-center rounded-xl border border-line bg-white text-sm font-medium text-ink"
+                >
+                  View
+                </a>
+                <a
+                  href={`/api/photos/download?path=${encodeURIComponent(photo.storagePath)}`}
+                  download
+                  className="flex h-10 flex-1 items-center justify-center rounded-xl bg-ink text-sm font-medium text-white"
+                >
+                  Download
+                </a>
+              </div>
             </div>
           ))}
         </section>
