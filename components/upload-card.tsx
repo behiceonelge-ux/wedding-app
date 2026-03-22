@@ -160,7 +160,6 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
           />
         </div>
 
-        <p className="text-sm text-ink/70">Lütfen her girişinizde aynı ad ve soyadı kullanın.</p>
         <p className="text-center text-xs text-ink/60">
           ⚠️ Aynı cihazdan devam etmek için sayfayı tamamen kapatmamaya özen gösterin.
         </p>

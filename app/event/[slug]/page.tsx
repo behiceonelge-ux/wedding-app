@@ -22,7 +22,7 @@ export default async function EventPage({ params }: EventPageProps) {
           <p className="text-xs uppercase tracking-[0.24em] text-clay">Etkinlik</p>
           <h1 className="mt-2 text-3xl font-semibold text-ink">{event.name}</h1>
           <div className="mt-4 space-y-3 text-center">
-            <p className="text-2xl font-semibold leading-8 text-ink">📸 O anı yakala, bizimle paylaş!</p>
+            <p className="text-2xl font-semibold leading-8 text-ink">O anı yakala, bizimle paylaş!</p>
             <p className="text-sm leading-6 text-ink/70">
               Düğün boyunca çektiğin fotoğrafları buraya yükleyerek anılarımıza katkıda bulunabilirsin.
             </p>
