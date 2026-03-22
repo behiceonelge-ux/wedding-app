@@ -17,6 +17,8 @@ Minimal mobile-first wedding photo upload app built with Next.js, Supabase, and 
 │   │   │       └── route.ts
 │   │   ├── guest-status
 │   │   │   └── route.ts
+│   │   ├── guest-session
+│   │   │   └── route.ts
 │   │   ├── photos
 │   │   │   └── download
 │   │   │       └── route.ts
@@ -54,7 +56,7 @@ Minimal mobile-first wedding photo upload app built with Next.js, Supabase, and 
 ## What it does
 
 - `/event/[slug]`: guest upload page
-- stable guest ID stored in both `localStorage` and a long-lived browser cookie
+- stable guest ID stored in `localStorage`, a 90-day cookie, and the page URL query param `g`
 - max 30 photos per guest
 - remaining upload counter
 - camera capture input only
@@ -126,5 +128,6 @@ Open:
 ## Notes
 
 - This app uses server-side Supabase access through the service role key for simplicity and reliability.
+- Guest identity is resolved in this order: URL `g` param, cookie, `localStorage`, then a newly generated ID. The resolved ID is synced back to all three before status loads.
 - The camera input uses `accept="image/*"` and `capture="environment"` for mobile browsers like iPhone Safari and Android Chrome.
 - Mobile browsers control the final camera UI behavior, but this is the standard camera-only web approach.

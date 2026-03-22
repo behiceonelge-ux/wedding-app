@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MAX_UPLOADS_PER_GUEST } from "@/lib/constants";
-import { getOrCreateGuestId } from "@/lib/guest";
+import { initializeGuestId } from "@/lib/guest";
 
 type UploadCardProps = {
   eventSlug: string;
@@ -11,6 +11,7 @@ type UploadCardProps = {
 
 export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const isInitializingRef = useRef(false);
   const [guestId, setGuestId] = useState("");
   const [remainingUploads, setRemainingUploads] = useState(MAX_UPLOADS_PER_GUEST);
   const [uploadedCount, setUploadedCount] = useState(0);
@@ -18,11 +19,20 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
-    const loadStatus = async () => {
-      const nextGuestId = getOrCreateGuestId(eventSlug);
+    let isActive = true;
 
-      if (!nextGuestId) {
+    const loadStatus = async () => {
+      if (isInitializingRef.current) {
+        return;
+      }
+
+      isInitializingRef.current = true;
+
+      const nextGuestId = await initializeGuestId(eventSlug);
+
+      if (!isActive || !nextGuestId) {
         setStatus("Unable to load upload status.");
+        isInitializingRef.current = false;
         return;
       }
 
@@ -33,18 +43,31 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
         { cache: "no-store" }
       );
 
-      if (!response.ok) {
+      if (!isActive || !response.ok) {
         setStatus("Unable to load upload status.");
+        isInitializingRef.current = false;
         return;
       }
 
       const data: { uploadedCount: number; remainingUploads: number } = await response.json();
+
+      if (!isActive) {
+        isInitializingRef.current = false;
+        return;
+      }
+
       setUploadedCount(data.uploadedCount);
       setRemainingUploads(data.remainingUploads);
       setStatus("Ready");
+      isInitializingRef.current = false;
     };
 
     void loadStatus();
+
+    return () => {
+      isActive = false;
+      isInitializingRef.current = false;
+    };
   }, [eventSlug]);
 
   const openCamera = () => {
