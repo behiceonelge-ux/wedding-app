@@ -199,18 +199,18 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
 
       {previewUrl ? (
         <div className="flex justify-center">
-          <div className="relative w-full max-w-[240px] overflow-hidden shadow-sm">
+          <div className="relative w-full max-w-[240px] overflow-hidden bg-[#1f1a17]/6 shadow-sm">
             <img
               src={previewUrl}
               alt=""
-              className="aspect-square w-full object-cover [filter:saturate(1.04)_contrast(1.02)_brightness(1.02)_sepia(0.015)_hue-rotate(-4deg)_blur(0.3px)]"
+              className="max-h-[320px] w-full object-contain [filter:saturate(1.08)_contrast(1.04)_brightness(1.03)_sepia(0.01)_hue-rotate(-4deg)_blur(0.22px)]"
             />
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(circle at 7% 18%, rgba(255, 166, 84, 0.24), transparent 28%), radial-gradient(circle at 94% 78%, rgba(255, 104, 74, 0.14), transparent 30%), linear-gradient(135deg, rgba(255, 184, 95, 0.08), transparent 42%, transparent 62%, rgba(255, 120, 72, 0.06))"
+                  "radial-gradient(circle at 7% 18%, rgba(255, 166, 84, 0.38), transparent 30%), radial-gradient(circle at 94% 78%, rgba(255, 92, 62, 0.24), transparent 32%), linear-gradient(135deg, rgba(255, 188, 96, 0.14), transparent 38%, transparent 60%, rgba(255, 112, 70, 0.1))"
               }}
             />
           </div>

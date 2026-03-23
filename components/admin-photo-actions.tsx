@@ -53,7 +53,7 @@ function addSubtleGrain(
   const { data } = imageData;
 
   for (let index = 0; index < data.length; index += 4) {
-    const grain = (Math.random() - 0.5) * 3.5;
+    const grain = (Math.random() - 0.5) * 2.5;
     data[index] = Math.max(0, Math.min(255, data[index] + grain));
     data[index + 1] = Math.max(0, Math.min(255, data[index + 1] + grain));
     data[index + 2] = Math.max(0, Math.min(255, data[index + 2] + grain));
@@ -71,8 +71,8 @@ function addLightLeaks(context: CanvasRenderingContext2D, width: number, height:
     height * 0.18,
     width * 0.3
   );
-  topLeftGlow.addColorStop(0, "rgba(255, 166, 84, 0.24)");
-  topLeftGlow.addColorStop(0.46, "rgba(255, 188, 104, 0.11)");
+  topLeftGlow.addColorStop(0, "rgba(255, 166, 84, 0.38)");
+  topLeftGlow.addColorStop(0.46, "rgba(255, 188, 104, 0.17)");
   topLeftGlow.addColorStop(1, "rgba(255, 188, 104, 0)");
 
   const bottomRightGlow = context.createRadialGradient(
@@ -83,15 +83,15 @@ function addLightLeaks(context: CanvasRenderingContext2D, width: number, height:
     height * 0.78,
     width * 0.33
   );
-  bottomRightGlow.addColorStop(0, "rgba(255, 104, 74, 0.14)");
-  bottomRightGlow.addColorStop(0.5, "rgba(255, 128, 84, 0.07)");
+  bottomRightGlow.addColorStop(0, "rgba(255, 92, 62, 0.24)");
+  bottomRightGlow.addColorStop(0.5, "rgba(255, 128, 84, 0.12)");
   bottomRightGlow.addColorStop(1, "rgba(255, 128, 84, 0)");
 
   const edgeWash = context.createLinearGradient(0, 0, width, height);
-  edgeWash.addColorStop(0, "rgba(255, 186, 98, 0.08)");
+  edgeWash.addColorStop(0, "rgba(255, 186, 98, 0.14)");
   edgeWash.addColorStop(0.4, "rgba(255, 186, 98, 0)");
   edgeWash.addColorStop(0.65, "rgba(255, 118, 72, 0)");
-  edgeWash.addColorStop(1, "rgba(255, 118, 72, 0.06)");
+  edgeWash.addColorStop(1, "rgba(255, 118, 72, 0.1)");
 
   context.save();
   context.globalCompositeOperation = "screen";
@@ -138,7 +138,7 @@ export default function AdminPhotoActions({ publicUrl, storagePath }: AdminPhoto
 
         context.fillStyle = "#f6f0e6";
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.filter = "saturate(1.04) contrast(1.02) brightness(1.02) sepia(0.015) hue-rotate(-4deg) blur(0.3px)";
+        context.filter = "saturate(1.08) contrast(1.04) brightness(1.03) sepia(0.01) hue-rotate(-4deg) blur(0.22px)";
         context.drawImage(image, 0, 0, image.width, image.height);
         context.filter = "none";
         addLightLeaks(context, image.width, image.height);
