@@ -200,7 +200,11 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
       {previewUrl ? (
         <div className="flex justify-center">
           <div className="w-full max-w-[240px] border border-[#ebe4d8] bg-[#fcfaf6] p-2 pb-5 shadow-sm">
-            <img src={previewUrl} alt="" className="aspect-square w-full object-cover" />
+            <img
+              src={previewUrl}
+              alt=""
+              className="aspect-square w-full object-cover [filter:saturate(0.92)_contrast(0.94)_brightness(1.02)_sepia(0.04)_blur(0.3px)]"
+            />
           </div>
         </div>
       ) : null}
