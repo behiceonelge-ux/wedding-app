@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import AdminLoginForm from "@/components/admin-login-form";
+import AdminPhotoActions from "@/components/admin-photo-actions";
 import { getAdminCookieName, getAdminCookieValue } from "@/lib/admin-auth";
 import { getAdminPhotosBySlug, getEventBySlug } from "@/lib/data";
 
@@ -68,23 +69,7 @@ export default async function AdminPage({ params, searchParams }: AdminPageProps
                 </p>
                 <p className="mt-1 text-xs text-ink/60">{formatUploadTime(photo.createdAt)}</p>
               </div>
-              <div className="flex gap-2 p-3">
-                <a
-                  href={photo.publicUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex h-10 flex-1 items-center justify-center rounded-xl border border-line bg-white text-sm font-medium text-ink"
-                >
-                  View
-                </a>
-                <a
-                  href={`/api/photos/download?path=${encodeURIComponent(photo.storagePath)}`}
-                  download
-                  className="flex h-10 flex-1 items-center justify-center rounded-xl bg-ink text-sm font-medium text-white"
-                >
-                  Download
-                </a>
-              </div>
+              <AdminPhotoActions publicUrl={photo.publicUrl} storagePath={photo.storagePath} />
             </div>
           ))}
         </section>
