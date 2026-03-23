@@ -13,6 +13,7 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [previewUrl, setPreviewUrl] = useState("");
   const [remainingUploads, setRemainingUploads] = useState(MAX_UPLOADS_PER_GUEST);
   const [uploadedCount, setUploadedCount] = useState(0);
   const [status, setStatus] = useState("Lütfen ad ve soyad girin.");
@@ -28,6 +29,14 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
       void fetchGuestStatus(savedGuest.firstName, savedGuest.lastName);
     }
   }, [eventSlug]);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const fetchGuestStatus = async (nextFirstName: string, nextLastName: string) => {
     setIsLoadingStatus(true);
@@ -87,6 +96,13 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
     if (!file || !trimmedFirstName || !trimmedLastName || isUploading || remainingUploads <= 0) {
       return;
     }
+
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
+    const nextPreviewUrl = URL.createObjectURL(file);
+    setPreviewUrl(nextPreviewUrl);
 
     const formData = new FormData();
     formData.append("slug", eventSlug);
@@ -180,6 +196,14 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
           {uploadedCount} / {MAX_UPLOADS_PER_GUEST} kullanıldı
         </p>
       </div>
+
+      {previewUrl ? (
+        <div className="flex justify-center">
+          <div className="w-full max-w-[240px] border border-[#ebe4d8] bg-[#fcfaf6] p-2 pb-5 shadow-sm">
+            <img src={previewUrl} alt="" className="aspect-square w-full object-cover" />
+          </div>
+        </div>
+      ) : null}
 
       <input
         ref={inputRef}
