@@ -53,7 +53,7 @@ function addSubtleGrain(
   const { data } = imageData;
 
   for (let index = 0; index < data.length; index += 4) {
-    const grain = (Math.random() - 0.5) * 6;
+    const grain = (Math.random() - 0.5) * 8;
     data[index] = Math.max(0, Math.min(255, data[index] + grain));
     data[index + 1] = Math.max(0, Math.min(255, data[index + 1] + grain));
     data[index + 2] = Math.max(0, Math.min(255, data[index + 2] + grain));
@@ -84,11 +84,9 @@ export default function AdminPhotoActions({ publicUrl, storagePath }: AdminPhoto
 
       try {
         const image = await loadImage(sourceUrl);
-        const borderSize = Math.max(10, Math.round(Math.min(image.width, image.height) * 0.035));
-        const bottomMargin = Math.max(28, Math.round(Math.min(image.width, image.height) * 0.16));
         const canvas = document.createElement("canvas");
-        canvas.width = image.width + borderSize * 2;
-        canvas.height = image.height + borderSize * 2 + bottomMargin;
+        canvas.width = image.width;
+        canvas.height = image.height;
 
         const context = canvas.getContext("2d");
 
@@ -96,10 +94,10 @@ export default function AdminPhotoActions({ publicUrl, storagePath }: AdminPhoto
           throw new Error("Canvas is not available.");
         }
 
-        context.fillStyle = "#fcfaf6";
+        context.fillStyle = "#f6f0e6";
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.filter = "saturate(0.84) contrast(0.9) brightness(1.04) sepia(0.075) blur(0.45px)";
-        context.drawImage(image, borderSize, borderSize, image.width, image.height);
+        context.filter = "saturate(0.76) contrast(0.88) brightness(1.06) sepia(0.03) hue-rotate(-6deg) blur(0.6px)";
+        context.drawImage(image, 0, 0, image.width, image.height);
         context.filter = "none";
         addSubtleGrain(context, image.width, image.height);
 
@@ -113,7 +111,7 @@ export default function AdminPhotoActions({ publicUrl, storagePath }: AdminPhoto
           throw new Error("Framed image could not be created.");
         }
 
-        downloadBlob(framedBlob, `${getBaseFileName(storagePath)}-analog-frame.${extension}`);
+        downloadBlob(framedBlob, `${getBaseFileName(storagePath)}-analog.${extension}`);
       } finally {
         URL.revokeObjectURL(sourceUrl);
       }
