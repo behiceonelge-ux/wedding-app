@@ -53,13 +53,55 @@ function addSubtleGrain(
   const { data } = imageData;
 
   for (let index = 0; index < data.length; index += 4) {
-    const grain = (Math.random() - 0.5) * 8;
+    const grain = (Math.random() - 0.5) * 3.5;
     data[index] = Math.max(0, Math.min(255, data[index] + grain));
     data[index + 1] = Math.max(0, Math.min(255, data[index + 1] + grain));
     data[index + 2] = Math.max(0, Math.min(255, data[index + 2] + grain));
   }
 
   context.putImageData(imageData, 0, 0);
+}
+
+function addLightLeaks(context: CanvasRenderingContext2D, width: number, height: number) {
+  const topLeftGlow = context.createRadialGradient(
+    width * 0.07,
+    height * 0.18,
+    0,
+    width * 0.07,
+    height * 0.18,
+    width * 0.3
+  );
+  topLeftGlow.addColorStop(0, "rgba(255, 166, 84, 0.24)");
+  topLeftGlow.addColorStop(0.46, "rgba(255, 188, 104, 0.11)");
+  topLeftGlow.addColorStop(1, "rgba(255, 188, 104, 0)");
+
+  const bottomRightGlow = context.createRadialGradient(
+    width * 0.94,
+    height * 0.78,
+    0,
+    width * 0.94,
+    height * 0.78,
+    width * 0.33
+  );
+  bottomRightGlow.addColorStop(0, "rgba(255, 104, 74, 0.14)");
+  bottomRightGlow.addColorStop(0.5, "rgba(255, 128, 84, 0.07)");
+  bottomRightGlow.addColorStop(1, "rgba(255, 128, 84, 0)");
+
+  const edgeWash = context.createLinearGradient(0, 0, width, height);
+  edgeWash.addColorStop(0, "rgba(255, 186, 98, 0.08)");
+  edgeWash.addColorStop(0.4, "rgba(255, 186, 98, 0)");
+  edgeWash.addColorStop(0.65, "rgba(255, 118, 72, 0)");
+  edgeWash.addColorStop(1, "rgba(255, 118, 72, 0.06)");
+
+  context.save();
+  context.globalCompositeOperation = "screen";
+  context.fillStyle = topLeftGlow;
+  context.fillRect(0, 0, width, height);
+  context.fillStyle = bottomRightGlow;
+  context.fillRect(0, 0, width, height);
+  context.fillStyle = edgeWash;
+  context.fillRect(0, 0, width, height);
+  context.restore();
 }
 
 export default function AdminPhotoActions({ publicUrl, storagePath }: AdminPhotoActionsProps) {
@@ -96,9 +138,10 @@ export default function AdminPhotoActions({ publicUrl, storagePath }: AdminPhoto
 
         context.fillStyle = "#f6f0e6";
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.filter = "saturate(0.76) contrast(0.88) brightness(1.06) sepia(0.03) hue-rotate(-6deg) blur(0.6px)";
+        context.filter = "saturate(1.04) contrast(1.02) brightness(1.02) sepia(0.015) hue-rotate(-4deg) blur(0.3px)";
         context.drawImage(image, 0, 0, image.width, image.height);
         context.filter = "none";
+        addLightLeaks(context, image.width, image.height);
         addSubtleGrain(context, image.width, image.height);
 
         const mimeType = getDownloadMimeType(sourceBlob.type);
