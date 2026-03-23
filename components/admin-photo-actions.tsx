@@ -53,7 +53,7 @@ function addSubtleGrain(
   const { data } = imageData;
 
   for (let index = 0; index < data.length; index += 4) {
-    const grain = (Math.random() - 0.5) * 4;
+    const grain = (Math.random() - 0.5) * 6;
     data[index] = Math.max(0, Math.min(255, data[index] + grain));
     data[index + 1] = Math.max(0, Math.min(255, data[index + 1] + grain));
     data[index + 2] = Math.max(0, Math.min(255, data[index + 2] + grain));
@@ -98,7 +98,7 @@ export default function AdminPhotoActions({ publicUrl, storagePath }: AdminPhoto
 
         context.fillStyle = "#fcfaf6";
         context.fillRect(0, 0, canvas.width, canvas.height);
-        context.filter = "saturate(0.92) contrast(0.94) brightness(1.02) sepia(0.04) blur(0.3px)";
+        context.filter = "saturate(0.84) contrast(0.9) brightness(1.04) sepia(0.075) blur(0.45px)";
         context.drawImage(image, borderSize, borderSize, image.width, image.height);
         context.filter = "none";
         addSubtleGrain(context, image.width, image.height);

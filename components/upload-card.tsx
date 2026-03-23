@@ -203,7 +203,7 @@ export default function UploadCard({ eventSlug, eventName }: UploadCardProps) {
             <img
               src={previewUrl}
               alt=""
-              className="aspect-square w-full object-cover [filter:saturate(0.92)_contrast(0.94)_brightness(1.02)_sepia(0.04)_blur(0.3px)]"
+              className="aspect-square w-full object-cover [filter:saturate(0.84)_contrast(0.9)_brightness(1.04)_sepia(0.075)_blur(0.45px)]"
             />
           </div>
         </div>
